@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pytest
-
 from plugin.plugins.from_the_heart import FromTheHeartPlugin
 from plugin.plugins.from_the_heart.dialogue import DialogueCandidate
 from plugin.plugins.from_the_heart.service import InteractionService

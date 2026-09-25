@@ -61,3 +61,13 @@ def test_policy_falls_back_to_speechless_for_unknown_intent():
     assert result.intent_key == "out_of_scope"
     assert result.reaction_key == "speechless"
     assert result.visual_variant_key == "restaurant_speechless"
+
+
+def test_exact_answer_is_not_marked_as_client_fallback():
+    result = apply_policy(
+        CONTRACT,
+        player_text="蒜蓉煎龙虾",
+        candidate=None,
+    )
+    assert result.intent_key == "favorite_correct"
+    assert result.used_fallback is False

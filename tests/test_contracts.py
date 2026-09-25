@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pytest
-
 from plugin.plugins.from_the_heart.contracts import (
     ContractError,
     ContractRepository,

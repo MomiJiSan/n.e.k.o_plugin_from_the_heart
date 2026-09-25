@@ -115,7 +115,9 @@ def apply_policy(
     )
     proposed_reply = candidate.reply_text.strip() if candidate is not None and allow_model_reply else ""
     reply_text = proposed_reply if _valid_reply(contract, policy, proposed_reply) else fallback_reply
-    used_fallback = reply_text != proposed_reply
+    # Exact answers deliberately use the contract-owned deterministic line;
+    # that is a successful resolution, not the client fallback path.
+    used_fallback = exact_intent is None and reply_text != proposed_reply
     if not _valid_reply(contract, policy, reply_text):
         reply_text = contract.fallback_reply
         used_fallback = True
