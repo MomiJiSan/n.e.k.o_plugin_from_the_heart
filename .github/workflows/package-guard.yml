@@ -52,5 +52,6 @@ jobs:
 
       - name: Reject bytecode caches and unsafe paths
         working-directory: neko
-        run: uv run python "../plugin-repo/.github/check_package_contents.py" \
-          "plugin/neko_plugin_cli/target/${PLUGIN_ID}.neko-plugin"
+        run: |
+          uv run python "../plugin-repo/.github/check_package_contents.py" \
+            "plugin/neko_plugin_cli/target/${PLUGIN_ID}.neko-plugin"
