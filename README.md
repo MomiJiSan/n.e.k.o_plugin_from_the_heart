@@ -21,6 +21,43 @@ node contract: 1.2.4
 
 ## 本地开发
 
+### 从 GitHub 加载
+
+将仓库放到 N.E.K.O 的插件源码目录后，在 N.E.K.O 源码根目录运行：
+
+```powershell
+git clone https://github.com/MomiJiSan/n.e.k.o_plugin_from_the_heart.git plugin/plugins/from_the_heart
+uv run neko-plugin check from_the_heart --strict
+```
+
+也可以把本仓库目录注册为开发插件，具体路径以当前 N.E.K.O 的开发模式配置为准。插件目录必须直接包含 `plugin.toml`。
+
+### 启动和停止
+
+第一阶段不自动启动插件。启动 N.E.K.O 插件服务后，手动启动：
+
+```powershell
+Invoke-RestMethod -Method Post `
+  -Uri http://127.0.0.1:48916/plugin/from_the_heart/start
+```
+
+停止插件或回滚到游戏端 fallback：
+
+```powershell
+Invoke-RestMethod -Method Post `
+  -Uri http://127.0.0.1:48916/plugin/from_the_heart/stop
+```
+
+游戏端使用：
+
+```text
+NEKO_PLUGIN_SERVER_ORIGIN=http://127.0.0.1:48916
+```
+
+插件停止、服务不可达或合同不兼容时，游戏继续使用本地 fallback，不要求联网才能推进主线。
+
+### 本地检查
+
 在 N.E.K.O 源码根目录运行：
 
 ```powershell
@@ -28,6 +65,19 @@ uv run neko-plugin check from_the_heart --strict
 uv run pytest -q plugin/plugins/from_the_heart/tests
 ```
 
-也可以在安装版 N.E.K.O 的插件开发模式中加载本目录，手动启动插件后触发 `resolve_interaction`。
+构建本地包时建议关闭 Python 字节码写入，避免缓存文件进入临时包：
+
+```powershell
+$env:PYTHONDONTWRITEBYTECODE="1"
+uv run neko-plugin build from_the_heart -o .\from_the_heart.neko-plugin
+```
+
+这只是本地验收包，不代表已经创建 Release。
+
+### 运行时兼容边界
+
+入口类只依赖公开插件 SDK。对白模型路径目前还使用 N.E.K.O 宿主提供的 `conversation` 配置和模型工具模块，因此插件需要在兼容的 N.E.K.O 插件宿主中运行；它不能在没有 N.E.K.O 宿主的纯 Python 环境中独立启动。插件不会导入游戏代码，也不会访问游戏存档目录。
+
+完整验证记录见 [`VALIDATION.md`](VALIDATION.md)。
 
 插件默认 `auto_start=false`，游戏端不会负责启动或停止插件。
