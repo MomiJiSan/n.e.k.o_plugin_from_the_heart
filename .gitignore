@@ -9,6 +9,7 @@ vendor/
 dist/
 build/
 *.egg-info/
+uv.lock
 store.db
 .env
 .DS_Store
