@@ -74,6 +74,8 @@ uv run neko-plugin build from_the_heart -o .\from_the_heart.neko-plugin
 
 这只是本地验收包，不代表已经创建 Release。
 
+GitHub CI 还会在构建后检查 `.neko-plugin` 内容，拒绝 `__pycache__`、`.pyc`、`.pyo` 和路径穿越项。该守卫只检查插件产物，不修改 N.E.K.O 构建器；如果构建器在 metadata probe 后重新生成缓存，CI 会直接失败。
+
 ### 运行时兼容边界
 
 入口类只依赖公开插件 SDK。对白模型路径目前还使用 N.E.K.O 宿主提供的 `conversation` 配置和模型工具模块，因此插件需要在兼容的 N.E.K.O 插件宿主中运行；它不能在没有 N.E.K.O 宿主的纯 Python 环境中独立启动。插件不会导入游戏代码，也不会访问游戏存档目录。
